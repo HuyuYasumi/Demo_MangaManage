@@ -27,12 +27,12 @@ async def imagefile(url, count):
 
 def getimage(url, title):
     global pname
-    lpath = './images'
+    BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    lpath = os.path.join(BASE_DIR, 'images')
     if not os.path.exists(lpath):
         os.mkdir(lpath)
     tname = title
-    local_base = 'file:///home/natsu/文档/Demo_YamiboManga/Demo_YamiboManga/manga/images'
-    local_link = os.path.join(local_base, tname)
+    local_link = os.path.join(BASE_DIR, tname)
     pname = os.path.join(lpath, tname)
     if not os.path.exists(pname):
         os.mkdir(pname)
