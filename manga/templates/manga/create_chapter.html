@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% block main %}
+    <button class="btn btn-default" style="color:#267fd9; text-decoration:none; border:0px;"><a href="/books/{{ pk }}">返回</a></button>
+    {% if success %}
+        <p>成功</p>
+    {% elif false %}
+        <p>失败</p>
+    {% endif %}
+    <form action="/create_chapter/?pk={{ pk }}&method=A" method="post" class="comment-form">
+        {% csrf_token %}
+        <div class="row">
+            <div class="col-md-4">
+                <label for="{{ form.name.id_for_label }}">增加章节：</label>
+                {{ form.name }}
+                {{ form.name.errors }}
+            </div>
+
+            <div class="col-md-4">
+                <label for="{{ form.link.id_for_label }}">百合会链接：</label>
+                {{ form.link }}
+                {{ form.link.errors }}
+            </div>
+
+            <div class="col-md-4">
+                <button type="submit" class="comment-btn">添加并下载 A</button>
+            </div>
+        </div>    <!-- row -->
+    </form>
+    <form action="/create_chapter/?pk={{ pk }}&method=B" method="post" class="comment-form">
+        {% csrf_token %}
+        <div class="row">
+            <div class="col-md-4">
+                <label for="{{ form.name.id_for_label }}">增加章节：</label>
+                {{ form.name }}
+                {{ form.name.errors }}
+            </div>
+
+            <div class="col-md-4">
+                <label for="{{ form.link.id_for_label }}">百合会链接：</label>
+                {{ form.link }}
+                {{ form.link.errors }}
+            </div>
+
+            <div class="col-md-4">
+                <button type="submit" class="comment-btn">添加并下载 B</button>
+            </div>
+        </div>    <!-- row -->
+    </form>
+{% endblock %}

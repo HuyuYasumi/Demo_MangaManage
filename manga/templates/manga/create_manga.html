@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+
+{% block main %}
+    <form action="{% url 'manga_url:create_manga' %}" method="post" class="comment-form">
+        {% csrf_token %}
+          <div class="row">
+            <div class="col-md-4">
+              <label for="{{ form.title.id_for_label }}">增加漫画：</label>
+                {{ form.title }}
+                {{ form.title.errors }}
+            </div>
+
+            <div class="col-md-4">
+              <label for="{{ form.author.id_for_label }}">作者：</label>
+                {{ form.author }}
+                {{ form.author.errors }}
+            </div>
+
+            <div class="col-md-4">
+                <div>
+                    <label for="{{ form.tags.id_for_label }}">Tag：</label>
+                </div>
+                {{ form.tags }}
+                {{ form.tags.errors }}
+            </div>
+              <div class="col-md-4">
+                  <button type="submit" class="comment-btn">添加</button>
+                  {% if success %}
+                      <p>成功</p>
+                  {% elif false %}
+                      <p>失败</p>
+                  {% endif %}
+              </div>
+          </div>    <!-- row -->
+    </form>
+    <form action="{% url 'manga_url:create_author' %}" method="post" class="comment-form">
+    {% csrf_token %}
+        <div class="row">
+            <div class="col-md-12">
+              <label for="{{ authorform.name.id_for_label }}">增加作者：</label>
+              {{ authorform.name }}
+              {{ authorform.name.errors }}
+            </div>
+            <div class="col-md-4">
+                <button type="submit" class="comment-btn">增加</button>
+                {% if author_success %}
+                    <p>成功</p>
+                {% elif author_false %}
+                    <p>失败</p>
+                {% endif %}
+            </div>
+        </div>    <!-- row -->
+    </form>
+    <form action="{% url 'manga_url:create_tag' %}" method="post" class="comment-form">
+        {% csrf_token %}
+        <div class="row">
+            <div class="col-md-12">
+                <label for="{{ tagform.name.id_for_label }}">增加Tag：</label>
+                {{ tagform.name }}
+                {{ tagform.name.errors }}
+            </div>
+            <div class="col-md-4">
+                <button type="submit" class="comment-btn">增加</button>
+                {% if tag_success %}
+                    <p>成功</p>
+                {% elif tag_false %}
+                    <p>失败</p>
+                {% endif %}
+            </div>
+        </div>    <!-- row -->
+    </form>
+{% endblock %}

@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+
+{% block main %}
+    <div>
+        <h1><a href="/books/{{ book.pk }}">{{ book.title }}</a></h1>
+        <p>读到了<b>  {{ book.count }}  </b></p>
+        <form action="/change_count/?pk={{ book.pk }}" method="post" class="comment-form">
+            {% csrf_token %}
+            <div class="row">
+                <div class="col-md-4">
+                    <label for="{{ form.count.id_for_label }}">看到了哪里？</label>
+                    {{ form.count }}
+                    {{ form.count.errors }}
+                    <button type="submit" class="comment-btn">更改</button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <button class="btn btn-default" style="color:#267fd9; text-decoration:none; border:0px;"><a href="/create_chapter/?pk={{ book.pk }}">增加</a></button>
+    {% if error_msg %}
+        <p>{{ error_msg }}</p>
+    {% endif %}
+    {% for chapter in chapter_list %}
+        <article class="post post-{{ chapter.pk }}">
+            <header class="entry-header">
+                <h1 class="entry-title">
+                    <a href="{{ chapter.local_link }}">{{ chapter.name }}</a>
+                </h1>
+            </header>
+        </article>
+    {% empty %}
+        <div class="no-past">暂时还没有收藏的章节！</div>
+    {% endfor %}
+    {% if is_paginated %}
+    <div class="pagination">
+      {% if first %}
+        <a href="?page=1">1</a>
+      {% endif %}
+      {% if left %}
+        {% if left_has_more %}
+            <span>...</span>
+        {% endif %}
+        {% for i in left %}
+            <a href="?page={{ i }}">{{ i }}</a>
+        {% endfor %}
+      {% endif %}
+      <a href="?page={{ page_obj.number }}" style="color: red">{{ page_obj.number }}</a>
+      {% if right %}
+        {% for i in right %}
+            <a href="?page={{ i }}">{{ i }}</a>
+        {% endfor %}
+        {% if right_has_more %}
+            <span>...</span>
+        {% endif %}
+      {% endif %}
+      {% if last %}
+        <a href="?page={{ paginator.num_pages }}">{{ paginator.num_pages }}</a>
+      {% endif %}
+    </div>
+    {% endif %}
+{% endblock main %}
