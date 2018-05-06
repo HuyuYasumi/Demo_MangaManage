@@ -32,7 +32,7 @@ def getimage(url, title):
     if not os.path.exists(lpath):
         os.mkdir(lpath)
     tname = title
-    local_link = os.path.join(BASE_DIR, tname)
+    local_link = 'file:///' + os.path.join(lpath, tname)
     pname = os.path.join(lpath, tname)
     if not os.path.exists(pname):
         os.mkdir(pname)
