@@ -6,7 +6,7 @@ from django.http import HttpResponseRedirect
 from django.template import RequestContext
 from .models import Author, Tag, Book, Chapter
 from .forms import BookForm, AuthorForm, TagForm, ChapterForm, CountForm
-from . import  getIgnore, app
+from . import  getYamiboImagesB, getYamiboImagesA
 
 class IndexView(ListView):
     model = Book
@@ -182,14 +182,13 @@ def create_chapter(request):
             url = chapter.link
             if method == 'A':
                 try:
-                    url_title = getIgnore.getImageUrl(url)
-                    chapter.local_link = getIgnore.getimage(url_title[0], url_title[1])
+                    chapter.local_link = getYamiboImagesA.main(url)
                 except Exception as e:
                     print(e)
                     return HttpResponseRedirect('/create_chapter/?pk='+pk+'&message=chapter_false')
             elif method == 'B':
                 try:
-                    chapter.local_link = app.main(url)
+                    chapter.local_link = getYamiboImagesB.getImageUrl(url)
                 except Exception as e:
                     print(e)
                     return HttpResponseRedirect('/create_chapter/?pk='+pk+'&message=chapter_false')

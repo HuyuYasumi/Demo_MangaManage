@@ -1,6 +1,7 @@
 import os, requests, time, asyncio, aiohttp
 from html.parser import HTMLParser
 from .header import Header
+from multiprocessing import Pool
 
 header = {
     'Cookie': Header.Cookie,
@@ -10,38 +11,48 @@ turl = {}
 ftitle = ''
 pname = ''
 
-async def imagefile(url, count):
+def imagefile(url, count):
     global pname
     print('downloading:', url)
     target = str(count) + '_' + url.split('/')[-1]
-    tmp = os.path.join(pname, target)
-    async with aiohttp.ClientSession() as client:
-        if os.path.exists(tmp):
-            print('existed:', url)
-        else:
-            async with client.get(url) as f:
-                with open(tmp, 'wb') as image:
-                    i = await f.read()
-                    image.write(i)
-            print('downloaded:', target)
+    path = os.path.join(pname, target)
+    if os.path.exists(path):
+        print('existed:', url)
+    else:
+        rq = requests.get(url, timeout = 10)
+        try:
+            image = open(path, 'wb')
+            try:
+                image.write(rq.content)
+            except Exception as e:
+                raise e
+            finally:
+                image.close()
+        except Exception as e:
+            raise e
+        finally:
+            rq.close()
+        print('downloaded:', target)
 
-def getimage(url, title):
+def getimage(url_dir, title):
     global pname
     BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     lpath = os.path.join(BASE_DIR, 'images')
     if not os.path.exists(lpath):
         os.mkdir(lpath)
-    tname = title
-    local_link = 'file:///' + os.path.join(lpath, tname)
-    pname = os.path.join(lpath, tname)
+    pname = os.path.join(lpath, title)
     if not os.path.exists(pname):
         os.mkdir(pname)
-    tasks = [imagefile(x, y) for x, y in url.items()]
-    # loop = asyncio.get_event_loop()
-    loop = asyncio.new_event_loop()
-    asyncio.set_event_loop(loop)
-    loop.run_until_complete(asyncio.wait(tasks))
-    loop.close()
+    local_link = 'file:///' + pname
+    p = Pool()
+    try:
+        for url, count in url_dir.items():
+            p.apply_async(imagefile, args=(url, count))
+    except Exception as e:
+        raise e
+    finally:
+        p.close()
+        p.join()
     return local_link
 
 
@@ -81,16 +92,17 @@ class MyHTMLParser(HTMLParser):
             self.flag = False
 
 def main(url):
-    if url != '':
-        uhtml = requests.get(url, headers = header, timeout = 10).text
-        parser = MyHTMLParser()
-        parser.feed(uhtml)
-        local_link = getimage(turl, ftitle)
-        print('\nEnd.')
-        return local_link
-    else:
-        print('bye!')
+    uhtml = requests.get(url, headers = header, timeout = 10).text
+    parser = MyHTMLParser()
+    parser.feed(uhtml)
+    local_link = getimage(turl, ftitle)
+    print('\nEnd.')
+    return local_link
 
 if __name__ == '__main__':
     url = input('Yamibo\'s url: ')
-    main(url)
+    if url != '':
+        main(url)
+    else:
+        print('Url is empty')
+
