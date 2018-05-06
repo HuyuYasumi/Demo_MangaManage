@@ -9,10 +9,8 @@ header = {
 }
 turl = {}
 ftitle = ''
-pname = ''
 
-def imagefile(url, count):
-    global pname
+def imagefile(url, count, pname):
     print('downloading:', url)
     target = str(count) + '_' + url.split('/')[-1]
     path = os.path.join(pname, target)
@@ -35,7 +33,6 @@ def imagefile(url, count):
         print('downloaded:', target)
 
 def getimage(url_dir, title):
-    global pname
     BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     lpath = os.path.join(BASE_DIR, 'images')
     if not os.path.exists(lpath):
@@ -47,7 +44,7 @@ def getimage(url_dir, title):
     p = Pool()
     try:
         for url, count in url_dir.items():
-            p.apply_async(imagefile, args=(url, count))
+            p.apply_async(imagefile, args=(url, count, pname))
     except Exception as e:
         raise e
     finally:
@@ -95,6 +92,8 @@ def main(url):
     uhtml = requests.get(url, headers = header, timeout = 10).text
     parser = MyHTMLParser()
     parser.feed(uhtml)
+    if turl == {}:
+        raise Exception()
     local_link = getimage(turl, ftitle)
     print('\nEnd.')
     return local_link

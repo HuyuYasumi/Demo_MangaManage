@@ -7,10 +7,8 @@ header = {
     'Cookie': Header.Cookie,
     'User-Agent': Header.User_Agent
 }
-pname = ''
 
-def imagefile(url, count):
-    global pname
+def imagefile(url, count, pname):
     print('downloading:', url)
     target = str(count) + '_' + url.split('/')[-1]
     path = os.path.join(pname, target)
@@ -33,7 +31,6 @@ def imagefile(url, count):
         print('downloaded:', target)
 
 def getimage(url_dir, title):
-    global pname
     BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     lpath = os.path.join(BASE_DIR, 'images')
     if not os.path.exists(lpath):
@@ -45,7 +42,7 @@ def getimage(url_dir, title):
     p = Pool()
     try:
         for url, count in url_dir.items():
-            p.apply_async(imagefile, args = (url, count))
+            p.apply_async(imagefile, args = (url, count, pname))
     except Exception as e:
         raise e
     finally:
@@ -60,6 +57,8 @@ def getImageUrl(url):
     print("\nstart downloading:", title)
     count = 0
     urls = html.find_all('ignore_js_op')
+    if urls == []:
+        raise Exception()
     url_dir = {}
     for u in urls:
         count += 1
