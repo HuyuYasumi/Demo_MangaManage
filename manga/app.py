@@ -82,15 +82,12 @@ class MyHTMLParser(HTMLParser):
 
 def main(url):
     if url != '':
-        try:
-            uhtml = requests.get(url, headers = header, timeout = 10).text
-            parser = MyHTMLParser()
-            parser.feed(uhtml)
-            local_link = getimage(turl, ftitle)
-            print('\nEnd.')
-            return local_link
-        except:
-            print("Network Error: " + url)
+        uhtml = requests.get(url, headers = header, timeout = 10).text
+        parser = MyHTMLParser()
+        parser.feed(uhtml)
+        local_link = getimage(turl, ftitle)
+        print('\nEnd.')
+        return local_link
     else:
         print('bye!')
 
