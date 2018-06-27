@@ -3,12 +3,12 @@
 {% block main %}
     <div>
         <h1><a href="/books/{{ book.pk }}">{{ book.title }}</a></h1>
-        <p>读到了<b>  {{ book.count }}  </b></p>
+        <p>备注:<b>  {{ book.count }}  </b></p>
         <form action="/change_count/?pk={{ book.pk }}" method="post" class="comment-form">
             {% csrf_token %}
             <div class="row">
                 <div class="col-md-4">
-                    <label for="{{ form.count.id_for_label }}">看到了哪里？</label>
+                    <label for="{{ form.count.id_for_label }}">更改备注:</label>
                     {{ form.count }}
                     {{ form.count.errors }}
                     <button type="submit" class="comment-btn">更改</button>
