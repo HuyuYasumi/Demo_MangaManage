@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block main %}
-    <button class="btn btn-default" style="color:#267fd9; text-decoration:none; border:0px;"><a href="{% url 'manga_url:create_manga' %}">增加</a></button>
+    <button class="btn btn-default" style="color:#267fd9; text-decoration:none; border:0px;"><a href="{% url 'manga_url:create_manga' %}">增加漫画</a></button>
     {% if error_msg %}
         <p>{{ error_msg }}</p>
     {% endif %}
